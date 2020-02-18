@@ -1,5 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
-
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <ItemGroup>
     <ProjectReference Include="..\Ecommerce.Storage.Services\Ecommerce.Storage.Services.csproj" />
     <ProjectReference Include="..\Ecommerce.Storage.Common\Ecommerce.Storage.Common.csproj" />
@@ -10,11 +9,16 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Secret\credentials.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Secret\token.json\Google.Apis.Auth.OAuth2.Responses.TokenResponse-user">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Content Include="Secret\**" CopyToPublishDirectory="PreserveNewest"/>
-  </ItemGroup>
 </Project>
