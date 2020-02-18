@@ -1,0 +1,15 @@
+# Instruction for deployment with heroku
+
+gmail address: ewebshop.storage@gmail.com
+
+##### Add The Git Remote
+  heroku git:remote -a ewebshop-storage -r heroku
+
+##### To set custom buildpack to heroku
+  heroku buildpacks:set jincod/dotnetcore
+
+##### Set Environment variable
+  heroku config:set ASPNETCORE_ENVIRONMENT=Production
+
+##### Finally, deployment
+  git push heroku master
