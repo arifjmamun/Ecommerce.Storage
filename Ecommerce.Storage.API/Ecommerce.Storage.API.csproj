@@ -15,8 +15,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Secret\**">
+    <Folder Include="Secret\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </Folder>
   </ItemGroup>
 </Project>
