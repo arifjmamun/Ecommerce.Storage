@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ecommerce.Storage.Common.Models;
 using Ecommerce.Storage.Services.Abstractions;
-using Google.Apis.Drive.v3.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,15 +20,16 @@ namespace Ecommerce.Storage.API.Controllers
     }
 
     /// <summary>
-    /// Upload profile image
+    /// Upload Profile avatar image
     /// </summary>
-    [HttpPost("upload/profile")]
-    public async Task<ActionResult<ApiResponse<File>>> UploadProfile(IFormFile profile)
+    /// <param name="userId"></param>
+    [HttpPost("upload/avatar/{userId}")]
+    public async Task<ActionResult<ApiResponse<string>>> UploadAvatar(string userId, IFormFile avatar)
     {
       try
       {
-        var file = await _cloudDriveService.UploadProfile(profile);
-        return file.CreateSuccessResponse();
+        var avatarUrl = await _cloudDriveService.UploadAvatar(userId, avatar);
+        return avatarUrl.CreateSuccessResponse();
       }
       catch (Exception exception)
       {
@@ -40,6 +40,7 @@ namespace Ecommerce.Storage.API.Controllers
     /// <summary>
     /// Upload products featured image
     /// </summary>
+    /// <param name="productId"></param>
     [HttpPost("products/{productId}/upload/featured-image")]
     public async Task<ActionResult<ApiResponse<string>>> UploadProductFeaturedImage(string productId, IFormFile featureImage)
     {
@@ -57,6 +58,7 @@ namespace Ecommerce.Storage.API.Controllers
     /// <summary>
     /// Upload products images
     /// </summary>
+    /// <param name="productId"></param>
     [HttpPost("products/{productId}/upload/images")]
     public async Task<ActionResult<ApiResponse<List<string>>>> UploadProductImages(string productId, List<IFormFile> images)
     {

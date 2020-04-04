@@ -66,35 +66,12 @@ namespace Ecommerce.Storage.Services.Implementations
       }
     }
 
-    public async Task<File> UploadProfile(IFormFile file)
+    public async Task<string> UploadAvatar(string userId, IFormFile file)
     {
       try
       {
-        var folderId = await GetFolderIdByName("public");
-        if (folderId == null)
-        {
-          folderId = await CreateShareableFolder("public");
-        }
-
-        var stream = file.OpenReadStream();
-        var fileMetadata = new File
-        {
-          Name = $"{DateTime.Now.ToLongTimeString()}_{file.FileName}",
-          MimeType = file.ContentType,
-          Parents = new List<string> { folderId }
-        };
-        var request = _storageService.GoogleDrive.Files.Create(
-          fileMetadata,
-          stream,
-          file.ContentType
-        );
-        var response = await request.UploadAsync();
-        if (response.Status == Google.Apis.Upload.UploadStatus.Completed)
-        {
-          await SetPermission(request.ResponseBody.Id);
-          return request.ResponseBody;
-        }
-        return null;
+        var featuredImageUrl = await UploadImage(userId, file, "avatar", "profile");
+        return featuredImageUrl;
       }
       catch (Exception ex)
       {
@@ -123,7 +100,7 @@ namespace Ecommerce.Storage.Services.Implementations
     {
       try
       {
-        var featuredImageUrl = await UploadProductImage(productId, file, "featured_images");
+        var featuredImageUrl = await UploadImage(productId, file, "featured_images", "products");
         return featuredImageUrl;
       }
       catch (Exception ex)
@@ -141,7 +118,7 @@ namespace Ecommerce.Storage.Services.Implementations
         for (int i = 0; i < files.Count; i++)
         {
           var file = files[i];
-          var imageUrl = await UploadProductImage(productId, file, "images");
+          var imageUrl = await UploadImage(productId, file, "images", "products");
           imageUrls.Add(imageUrl);
         }
         return imageUrls;
@@ -153,18 +130,18 @@ namespace Ecommerce.Storage.Services.Implementations
       }
     }
 
-    private async Task<string> UploadProductImage(string productId, IFormFile file, string type)
+    private async Task<string> UploadImage(string id, IFormFile file, string type, string parentFolderName)
     {
       var folderId = await GetFolderIdByName(type);
       if (folderId == null)
       {
-        folderId = await CreateShareableFolder(type, "products");
+        folderId = await CreateShareableFolder(type, parentFolderName);
       }
 
       var stream = file.OpenReadStream();
       var fileMetadata = new File
       {
-        Name = type == "images" ? $"{productId}_{DateTime.Now.ToLongTimeString()}_{file.FileName}" : $"{productId}_{file.FileName}",
+        Name = $"{id}_{DateTime.Now.ToLongTimeString()}_{file.FileName}",
         MimeType = file.ContentType,
         Parents = new List<string> { folderId }
       };

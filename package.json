@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "start": "cd Ecommerce.Storage.API && dotnet watch run",
+    "rebuild": "dotnet clean && dotnet build"
+  }
+}
